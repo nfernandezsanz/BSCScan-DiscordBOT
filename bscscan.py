@@ -10,7 +10,7 @@ def token_info(contract):
 
     #print holders
     tokenholders = soupa.find(id='ContentPlaceHolder1_tr_tokenHolders').get_text()
-    tokenholdersa = "Holders: " + ((((tokenholders.strip()).strip("Holders:")).strip()).strip(" a ")).strip()
+    tokenholdersa = ((((tokenholders.strip()).strip("Holders:")).strip()).strip(" a ")).strip()
     #print(tokenholdersa)
 
     #print name
@@ -18,5 +18,4 @@ def token_info(contract):
     tokename = "Name: " + website
     #print(tokename)
 
-    return (tokename, tokenholdersa)
-
+    return tokenholdersa

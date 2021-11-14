@@ -2,29 +2,23 @@ import asyncio
 import discord
 from discord.ext  import commands
 from bscscan      import *
+from config       import *
 
-async def update_task(bot, coin):
+
+async def update_task(bot, contract):
     counter = 0
     while(True):
-        data  = get_coin_status(coin)
-        emoji = "➡️"
-
-        if(data['Change'] < 0):
-            emoji = "⏬"
-        elif(data['Change'] > 0):
-            emoji = "⏫"
-
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name= "$" + str(data['Price']) + " " + emoji + " " + str(data['Change']) + "%"))
-        await asyncio.sleep(60)
+        data  = token_info(contract)
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name= str(data) + " holders 🚀"))
+        await asyncio.sleep(500)
 
 
 class Price_Tracker(commands.Bot):
     
-    def __init__(self, command_prefix, self_bot, coin_id):
-        commands.Bot.__init__(self, command_prefix=command_prefix, self_bot=self_bot, coin_id=coin_id)
+    def __init__(self, command_prefix, self_bot, contract):
+        commands.Bot.__init__(self, command_prefix=command_prefix, self_bot=self_bot, contract=contract)
         self.message1 = "[INFO]: Bot now online"
-        self.message2 = "Bot still online"
-        self.coin     = str(coin_id)
+        self.coin     = str(contract)
     
     async def on_ready(self):
         print(f'Logged in as {self.user} (ID: {self.user.id})')
@@ -41,10 +35,10 @@ i        = 0
 
 for bot in bot_info_list:
     bot_name   = list(bot.keys())[0]
-    bot_token  = bot[bot_name]
+    bot_token  = bot[bot_name][0]
     print("Initializing: " + bot_name + " ...")
     #Create Bot
-    bot_list.append(Price_Tracker(command_prefix="!", self_bot=False, coin_id=bot_name))
+    bot_list.append(Price_Tracker(command_prefix="~", self_bot=False, contract=bot[bot_name][1]))
     task.append(loop.create_task(bot_list[i].start(bot_token))) 
     i+=1
 

@@ -27,5 +27,3 @@ def read_bots():
         else:
             print(str(x) + " has invalid information!")
     return lista
-
-print(read_bots())
